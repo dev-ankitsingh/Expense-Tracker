@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
+    <title>Daily Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Hero Background -->
+    <div class="hero-bg"></div>
+
+    <!-- Auth Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-logo">💰 Expense Tracker</h1>
+                <p class="auth-tagline">Track your expenses, achieve your goals</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-form-container" id="loginForm">
+                <h2 class="auth-title">Welcome Back</h2>
+                <form id="loginFormElement" class="auth-form">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-gradient">Sign In</button>
+                </form>
+                <p class="auth-switch">
+                    Don't have an account? 
+                    <a href="#" id="showSignup">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="auth-form-container" id="signupForm" style="display: none;">
+                <h2 class="auth-title">Create Account</h2>
+                <form id="signupFormElement" class="auth-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn-gradient">Sign Up</button>
+                </form>
+                <p class="auth-switch">
+                    Already have an account? 
+                    <a href="#" id="showLogin">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden until logged in) -->
+    <div class="main-app" id="mainApp" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="app-title">💰 Expense Tracker</h1>
+                    <div class="header-actions">
+                        <div class="user-info">
+                            <span class="user-name" id="userName">User</span>
+                            <button class="btn-icon" id="logoutBtn" title="Logout">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <button class="btn-icon" id="exportBtn" title="Export Data">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="container">
+            <!-- Dashboard Stats -->
+            <section class="dashboard-stats">
+                <!-- Balance Card -->
+                <div class="stat-card balance-card">
+                    <div class="stat-icon">💳</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Balance</p>
+                        <h2 class="stat-value balance-value" id="totalBalance">$0.00</h2>
+                    </div>
+                    <div class="balance-actions">
+                        <button class="btn-small btn-success" id="addFundsBtn">+ Add Funds</button>
+                        <button class="btn-small btn-danger" id="addExpenseBtn">- Add Expense</button>
+                    </div>
+                </div>
+
+                <!-- Today's Expenses -->
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Today's Expenses</p>
+                        <h3 class="stat-value" id="todayExpenses">$0.00</h3>
+                    </div>
+                </div>
+
+                <!-- Monthly Expenses -->
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <p class="stat-label">This Month</p>
+                        <h3 class="stat-value" id="monthlyExpenses">$0.00</h3>
+                    </div>
+                </div>
+
+                <!-- Total Funds -->
+                <div class="stat-card">
+                    <div class="stat-icon">💵</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Funds</p>
+                        <h3 class="stat-value" id="totalFunds">$0.00</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budget Alert -->
+            <div class="budget-alert" id="budgetAlert" style="display: none;">
+                <span class="alert-icon">⚠️</span>
+                <span class="alert-text">You've exceeded 80% of your monthly budget!</span>
+                <button class="alert-close" id="closeBudgetAlert">×</button>
+            </div>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">Monthly Spending Trend</h3>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Category Breakdown</h3>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Filters & Search -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Period</label>
+                        <select id="periodFilter" class="filter-select">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="custom">Custom Date Range</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="customDateGroup" style="display: none;">
+                        <label>From Date</label>
+                        <input type="date" id="fromDate" class="filter-select">
+                    </div>
+                    <div class="filter-group" id="customDateGroupTo" style="display: none;">
+                        <label>To Date</label>
+                        <input type="date" id="toDate" class="filter-select">
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="Food">🍔 Food</option>
+                            <option value="Travel">✈️ Travel</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Bills">📄 Bills</option>
+                            <option value="Other">📦 Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group search-group">
+                        <label>Search</label>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search transactions...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section class="transactions-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Transactions</h2>
+                    <div class="transaction-tabs">
+                        <button class="tab-btn active" data-tab="all">All</button>
+                        <button class="tab-btn" data-tab="funds">Funds</button>
+                        <button class="tab-btn" data-tab="expenses">Expenses</button>
+                    </div>
+                </div>
+                
+                <div class="transactions-list" id="transactionsList">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/953025/2026-02-04/5d79902e-9c76-4b07-a4cd-c131c778b547.png" alt="Empty wallet" class="empty-image">
+                        <h3 class="empty-title">No Transactions Yet</h3>
+                        <p class="empty-text">Start tracking your expenses by adding your first transaction</p>
+                        <button class="btn-gradient" id="emptyAddBtn">Add Transaction</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="fab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+
+        <!-- FAB Menu -->
+        <div class="fab-menu" id="fabMenu">
+            <button class="fab-option" id="fabAddFunds">
+                <span class="fab-label">Add Funds</span>
+                <span class="fab-icon">💵</span>
+            </button>
+            <button class="fab-option" id="fabAddExpense">
+                <span class="fab-label">Add Expense</span>
+                <span class="fab-icon">💸</span>
+            </button>
+        </div>
+
+        <!-- Add Funds Modal -->
+        <div class="modal" id="addFundsModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">💵 Add Funds</h3>
+                    <button class="modal-close" data-modal="addFundsModal">×</button>
+                </div>
+                <form id="addFundsForm" class="modal-form">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="fundsAmount" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Source</label>
+                        <input type="text" id="fundsSource" placeholder="e.g., Salary, Gift, Refund" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="fundsDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-modal="addFundsModal">Cancel</button>
+                        <button type="submit" class="btn-gradient">Add Funds</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Expense Modal -->
+        <div class="modal" id="addExpenseModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">💸 Add Expense</h3>
+                    <button class="modal-close" data-modal="addExpenseModal">×</button>
+                </div>
+                <form id="addExpenseForm" class="modal-form">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="expenseCategory" required>
+                            <option value="">Select category</option>
+                            <option value="Food">🍔 Food</option>
+                            <option value="Travel">✈️ Travel</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Bills">📄 Bills</option>
+                            <option value="Other">📦 Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Note</label>
+                        <input type="text" id="expenseNote" placeholder="What did you spend on?">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-modal="addExpenseModal">Cancel</button>
+                        <button type="submit" class="btn-gradient">Add Expense</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Transaction Modal -->
+        <div class="modal" id="editModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="editModalTitle">Edit Transaction</h3>
+                    <button class="modal-close" data-modal="editModal">×</button>
+                </div>
+                <form id="editForm" class="modal-form">
+                    <input type="hidden" id="editId">
+                    <input type="hidden" id="editType">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="editAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group" id="editSourceGroup">
+                        <label>Source</label>
+                        <input type="text" id="editSource">
+                    </div>
+                    <div class="form-group" id="editCategoryGroup" style="display: none;">
+                        <label>Category</label>
+                        <select id="editCategory">
+                            <option value="Food">🍔 Food</option>
+                            <option value="Travel">✈️ Travel</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Bills">📄 Bills</option>
+                            <option value="Other">📦 Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="editNoteGroup" style="display: none;">
+                        <label>Note</label>
+                        <input type="text" id="editNote">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-modal="editModal">Cancel</button>
+                        <button type="submit" class="btn-gradient">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal" id="deleteModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h3 class="modal-title">⚠️ Confirm Delete</h3>
+                    <button class="modal-close" data-modal="deleteModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" data-modal="deleteModal">Cancel</button>
+                    <button type="button" class="btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Modal -->
+        <div class="modal" id="exportModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h3 class="modal-title">📥 Export Data</h3>
+                    <button class="modal-close" data-modal="exportModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Choose your preferred export format:</p>
+                </div>
+                <div class="export-options">
+                    <button class="export-btn" id="exportCSV">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span>Export as CSV</span>
+                        <small>Spreadsheet format with all details</small>
+                    </button>
+                    <button class="export-btn" id="exportPDF">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <line x1="10" y1="9" x2="8" y2="9"></line>
+                        </svg>
+                        <span>Export as PDF</span>
+                        <small>Professional report with summary</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="toast">
+            <img src="https://mgx-backend-cdn.metadl.com/generate/images/953025/2026-02-04/dd5c3693-feb6-429a-96fc-c71e332ca86e.png" alt="Success" class="toast-icon">
+            <span class="toast-message" id="toastMessage">Success!</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
